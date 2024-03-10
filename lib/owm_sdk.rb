@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'owm_sdk/version'
+require_relative "owm_sdk/version"
 
-require 'octopoller'
-require 'lru_redux'
+require "octopoller"
+require "lru_redux"
 
-require 'uri'
-require 'net/http'
-require 'json'
+require "uri"
+require "net/http"
+require "json"
 
 module OwmSdk
   class Error < StandardError; end
@@ -27,7 +27,7 @@ module OwmSdk
         return weather
       end
 
-      Kernel.raise Error, 'Weather data for provided city was not found'
+      Kernel.raise Error, "Weather data for provided city was not found"
     end
 
     def initialize(api_key, mode = :on_demand, units = :standard)
@@ -44,30 +44,30 @@ module OwmSdk
     private
 
     def get(path, query)
-      uri = URI.parse('https://api.openweathermap.org')
+      uri = URI.parse("https://api.openweathermap.org")
       uri.path = path
       uri.query = URI.encode_www_form(query)
 
       res = Net::HTTP.get_response(uri)
       body = JSON.parse(res.body)
-      raise Error, "Got HTTP response #{res.code}, message: '#{body['message']}'" unless res.code == '200'
+      raise Error, "Got HTTP response #{res.code}, message: '#{body["message"]}'" unless res.code == "200"
 
       body
     end
 
     def get_weather_request(location)
-      get('/data/2.5/weather', { lat: location[:lat], lon: location[:lon], appid: @api_key, units: @units.to_s })
+      get("/data/2.5/weather", {lat: location[:lat], lon: location[:lon], appid: @api_key, units: @units.to_s})
     end
 
     def get_location_request(city)
-      res = get('/geo/1.0/direct', { q: city, limit: 1, appid: @api_key })
+      res = get("/geo/1.0/direct", {q: city, limit: 1, appid: @api_key})
 
-      raise Error, 'Provided city was not found' if res[0].nil?
+      raise Error, "Provided city was not found" if res[0].nil?
 
-      lat = res[0]['lat']
-      lon = res[0]['lon']
+      lat = res[0]["lat"]
+      lon = res[0]["lon"]
 
-      { lat: lat, lon: lon }
+      {lat: lat, lon: lon}
     end
 
     def get_location(city)
@@ -82,7 +82,7 @@ module OwmSdk
         return location
       end
 
-      Kernel.raise Error, 'oops'
+      Kernel.raise Error, "oops"
     end
 
     def update_weather
@@ -104,7 +104,3 @@ module OwmSdk
     end
   end
 end
-
-test = OwmSdk::Weather.new('c39024401ccb1736e173fda2bf622417', :on_demand, :metric)
-
-puts test.get_weather(2)
