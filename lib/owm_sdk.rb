@@ -31,6 +31,8 @@ module OwmSdk
     end
 
     def initialize(api_key, mode = :on_demand, units = :standard)
+      validate_configuration(api_key, mode, units)
+
       @api_key = api_key
       @units = units
       @location_cache = LruRedux::Cache.new(LOCATION_CACHE_SIZE)
@@ -41,6 +43,30 @@ module OwmSdk
     end
 
     private
+
+    def validate_configuration(api_key, mode, units)
+      validate_api_key(api_key)
+      validate_mode(mode)
+      validate_units(units)
+    end
+
+    def validate_api_key(api_key)
+      raise ArgumentError, "API key cannot be nil or empty" if api_key.nil? || api_key.empty?
+    end
+
+    def validate_mode(mode)
+      valid_modes = %i[on_demand polling]
+      raise ArgumentError, "Invalid mode. Supported modes: #{valid_modes.join(", ")}" unless valid_modes.include?(mode)
+    end
+
+    def validate_units(units)
+      valid_units = %i[standard metric imperial]
+
+      unless valid_units.include?(units)
+        raise ArgumentError,
+          "Invalid units. Supported units: #{valid_units.join(", ")}"
+      end
+    end
 
     def get(path, query)
       uri = URI.parse("https://api.openweathermap.org")
