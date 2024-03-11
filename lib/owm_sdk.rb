@@ -2,7 +2,6 @@
 
 require_relative "owm_sdk/version"
 
-require "octopoller"
 require "lru_redux"
 
 require "uri"
@@ -14,18 +13,13 @@ module OwmSdk
 
   class Weather
     def get_weather(city)
-      weather = @weather_cache[city] unless @mode == :polling
-
-      return weather unless weather.nil?
-
       location = get_location(city)
 
-      weather = get_weather_request(location)
+      weather_cached = @weather_cache[location]
+      return weather_cached unless weather_cached.nil?
 
-      unless weather.nil?
-        @weather_cache[city] = weather
-        return weather
-      end
+      weather = get_weather_request(location)
+      return weather unless weather.nil?
 
       Kernel.raise Error, "Weather data for provided city was not found"
     end
@@ -56,7 +50,38 @@ module OwmSdk
     end
 
     def get_weather_request(location)
-      get("/data/2.5/weather", {lat: location[:lat], lon: location[:lon], appid: @api_key, units: @units.to_s})
+      res = get("/data/2.5/weather", {lat: location[:lat], lon: location[:lon], appid: @api_key, units: @units.to_s})
+
+      weather_data = res["weather"].first
+      temperature_data = res["main"]
+      wind_data = res["wind"]
+      sys_data = res["sys"]
+
+      weather = {
+        "weather" => {
+          "main" => weather_data["main"],
+          "description" => weather_data["description"]
+        },
+        "temperature" => {
+          "temp" => temperature_data["temp"],
+          "feels_like" => temperature_data["feels_like"]
+        },
+        "visibility" => res["visibility"],
+        "wind" => {
+          "speed" => wind_data["speed"]
+        },
+        "datetime" => res["dt"],
+        "sys" => {
+          "sunrise" => sys_data["sunrise"],
+          "sunset" => sys_data["sunset"]
+        },
+        "timezone" => res["timezone"],
+        "name" => res["name"]
+      }
+
+      @weather_cache[location] = weather
+
+      weather
     end
 
     def get_location_request(city)
@@ -87,7 +112,7 @@ module OwmSdk
 
     def update_weather
       @location_cache.to_a.each do |city|
-        get_weather(city[0])
+        get_weather_request(city[1])
       end
     end
 
