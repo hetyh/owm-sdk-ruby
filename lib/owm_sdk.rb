@@ -11,26 +11,31 @@ require "json"
 module OwmSdk
   class Error < StandardError; end
 
+  class RequestError < StandardError; end
+
+  class ServerError < StandardError; end
+
   class Weather
+    POLLING_RATE = 600
+    LOCATION_CACHE_SIZE = 10
+    WEATHER_CACHE_SIZE = 10
+    WEATHER_CACHE_TTL = 600
+
     def get_weather(city)
       location = get_location(city)
 
       weather_cached = @weather_cache[location]
       return weather_cached unless weather_cached.nil?
 
-      weather = get_weather_request(location)
-      return weather unless weather.nil?
-
-      Kernel.raise Error, "Weather data for provided city was not found"
+      get_weather_request(location)
     end
 
     def initialize(api_key, mode = :on_demand, units = :standard)
       @api_key = api_key
       @units = units
-      @location_cache = LruRedux::Cache.new(10)
-      @weather_cache = LruRedux::TTL::Cache.new(10, 600)
+      @location_cache = LruRedux::Cache.new(LOCATION_CACHE_SIZE)
+      @weather_cache = LruRedux::TTL::Cache.new(WEATHER_CACHE_SIZE, WEATHER_CACHE_TTL)
 
-      @polling_rate = 600
       @mode = mode
       @polling_thread = Thread.new { polling_loop } if @mode == :polling
     end
@@ -44,9 +49,13 @@ module OwmSdk
 
       res = Net::HTTP.get_response(uri)
       body = JSON.parse(res.body)
-      raise Error, "Got HTTP response #{res.code}, message: '#{body["message"]}'" unless res.code == "200"
 
-      body
+      case res.code.to_f
+      when 200 then body
+      when 400..499 then raise RequestError, "#{body["message"]}"
+      when 500..599 then raise ServerError, "#{body["message"]}"
+      else raise Error, "#{body["message"]}"
+      end
     end
 
     def get_weather_request(location)
@@ -58,25 +67,25 @@ module OwmSdk
       sys_data = res["sys"]
 
       weather = {
-        "weather" => {
-          "main" => weather_data["main"],
-          "description" => weather_data["description"]
+        weather: {
+          main: weather_data["main"],
+          description: weather_data["description"]
         },
-        "temperature" => {
-          "temp" => temperature_data["temp"],
-          "feels_like" => temperature_data["feels_like"]
+        temperature: {
+          temp: temperature_data["temp"],
+          feels_like: temperature_data["feels_like"]
         },
-        "visibility" => res["visibility"],
-        "wind" => {
-          "speed" => wind_data["speed"]
+        visibility: res["visibility"],
+        wind: {
+          speed: wind_data["speed"]
         },
-        "datetime" => res["dt"],
-        "sys" => {
-          "sunrise" => sys_data["sunrise"],
-          "sunset" => sys_data["sunset"]
+        datetime: res["dt"],
+        sys: {
+          sunrise: sys_data["sunrise"],
+          sunset: sys_data["sunset"]
         },
-        "timezone" => res["timezone"],
-        "name" => res["name"]
+        timezone: res["timezone"],
+        name: res["name"]
       }
 
       @weather_cache[location] = weather
@@ -89,10 +98,11 @@ module OwmSdk
 
       raise Error, "Provided city was not found" if res[0].nil?
 
-      lat = res[0]["lat"]
-      lon = res[0]["lon"]
+      location = {lat: res[0]["lat"], lon: res[0]["lon"]}
 
-      {lat: lat, lon: lon}
+      @location_cache[city] = location
+
+      location
     end
 
     def get_location(city)
@@ -100,14 +110,7 @@ module OwmSdk
 
       return location unless location.nil?
 
-      location = get_location_request(city)
-
-      unless location.nil?
-        @location_cache[city] = location
-        return location
-      end
-
-      Kernel.raise Error, "oops"
+      get_location_request(city)
     end
 
     def update_weather
@@ -121,10 +124,10 @@ module OwmSdk
         begin
           update_weather
         rescue Error => e
-          puts "Error during API requests: #{e.message}"
+          puts "Error during polling: #{e.message}"
         end
 
-        sleep @polling_rate
+        sleep POLLING_RATE
       end
     end
   end
