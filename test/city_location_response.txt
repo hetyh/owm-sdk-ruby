@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Server: openresty
+Date: Tue, 12 Mar 2024 15:45:56 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 2650
+Connection: keep-alive
+X-Cache-Key: /geo/1.0/direct?limit=1&q=london
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Methods: GET, POST
+
+[{"name":"London","local_names":{"hi":"लंदन","my":"လန်ဒန်မြို့","mt":"Londra","tl":"Londres","ia":"London","li":"Londe","rm":"Londra","cs":"Londýn","sq":"Londra","sl":"London","ps":"لندن","et":"London","ff":"London","ka":"ლონდონი","gn":"Lóndyre","ha":"Landan","ba":"Лондон","gu":"લંડન","sd":"لنڊن","kv":"Лондон","se":"London","bh":"लंदन","gv":"Lunnin","sc":"Londra","ln":"Lóndɛlɛ","ga":"Londain","yi":"לאנדאן","cv":"Лондон","co":"Londra","su":"London","ne":"लन्डन","nl":"Londen","br":"Londrez","feature_name":"London","uk":"Лондон","os":"Лондон","ro":"Londra","pa":"ਲੰਡਨ","lb":"London","tk":"London","fr":"Londres","lo":"ລອນດອນ","pl":"Londyn","jv":"London","km":"ឡុងដ៍","es":"Londres","ms":"London","io":"London","sa":"लन्डन्","wo":"Londar","na":"London","th":"ลอนดอน","is":"London","ascii":"London","kn":"ಲಂಡನ್","zh":"伦敦","ur":"علاقہ لندن","qu":"London","ay":"London","av":"Лондон","he":"לונדון","tg":"Лондон","sh":"London","nv":"Tooh Dineʼé Bikin Haalʼá","kl":"London","an":"Londres","bi":"London","sr":"Лондон","sv":"London","ku":"London","no":"London","te":"లండన్","ce":"Лондон","ja":"ロンドン","fo":"London","tt":"Лондон","sm":"Lonetona","so":"London","sn":"London","zu":"ILondon","ie":"London","it":"Londra","mg":"Lôndôna","bo":"ལོན་ཊོན།","vi":"Luân Đôn","ny":"London","tw":"London","oc":"Londres","st":"London","ee":"London","ko":"런던","ru":"Лондон","kk":"Лондон","kw":"Loundres","om":"Landan","ky":"Лондон","el":"Λονδίνο","fa":"لندن","mi":"Rānana","am":"ለንደን","hu":"London","lt":"Londonas","bn":"লন্ডন","ar":"لندن","gl":"Londres","en":"London","pt":"Londres","sk":"Londýn","ht":"Lonn","mn":"Лондон","de":"London","uz":"London","vo":"London","id":"London","gd":"Lunnainn","af":"Londen","yo":"Lọndọnu","ml":"ലണ്ടൻ","hy":"Լոնդոն","ta":"இலண்டன்","ca":"Londres","wa":"Londe","fi":"Lontoo","to":"Lonitoni","da":"London","sw":"London","ig":"London","ab":"Лондон","or":"ଲଣ୍ଡନ","mr":"लंडन","fj":"Lodoni","cy":"Llundain","eo":"Londono","eu":"Londres","cu":"Лондонъ","lv":"Londona","fy":"Londen","nn":"London","bs":"London","hr":"London","az":"London","bm":"London","be":"Лондан","tr":"Londra","mk":"Лондон","ug":"لوندۇن","bg":"Лондон","si":"ලන්ඩන්"},"lat":51.5073219,"lon":-0.1276474,"country":"GB","state":"England"}]
