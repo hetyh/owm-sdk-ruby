@@ -16,7 +16,7 @@ module OwmSdk
       when 200 then body
       when 400..499 then raise OwmSdk::Errors::RequestError, (body["message"]).to_s
       when 500..599 then raise OwmSdk::Errors::ServerError, (body["message"]).to_s
-      else raise Error, (body["message"]).to_s
+      else raise OwmSdk::Errors::Error, (body["message"]).to_s
       end
     end
 
@@ -58,7 +58,7 @@ module OwmSdk
     def get_location_request(city)
       res = get("/geo/1.0/direct", {q: city, limit: 1, appid: @api_key})
 
-      raise Error, "Provided city was not found" if res[0].nil?
+      raise OwmSdk::Errors::Error, "Provided city was not found" if res[0].nil?
 
       location = {lat: res[0]["lat"], lon: res[0]["lon"]}
 

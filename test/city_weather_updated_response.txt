@@ -1,0 +1,12 @@
+HTTP/1.1 200 OK
+Server: openresty
+Date: Tue, 12 Mar 2024 15:42:29 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 484
+Connection: keep-alive
+X-Cache-Key: /data/2.5/weather?lat=51.51&lon=-0.13&units=standard
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Methods: GET, POST
+
+{"coord":{"lon":-0.1257,"lat":51.5085},"weather":[{"id":300,"main":"Drizzle","description":"light intensity drizzle","icon":"09d"}],"base":"stations","main":{"temp":283.07,"feels_like":281.85,"temp_min":284.29,"temp_max":287.13,"pressure":1009,"humidity":95},"visibility":3300,"wind":{"speed":5.14,"deg":240},"clouds":{"all":100},"dt":1710257919,"sys":{"type":2,"id":2075535,"country":"GB","sunrise":1710224446,"sunset":1710266385},"timezone":0,"id":2643743,"name":"London","cod":200}

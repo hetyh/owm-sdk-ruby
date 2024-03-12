@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "lru_redux", "~> 1.1"
 
   spec.add_development_dependency "webmock", "~> 3.23.0"
+  spec.add_development_dependency "minitest-stub-const", "~> 0.6"
 end

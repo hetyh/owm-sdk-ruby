@@ -20,6 +20,7 @@ GEM
     lint_roller (1.1.0)
     lru_redux (1.1.0)
     minitest (5.22.2)
+    minitest-stub-const (0.6)
     parallel (1.24.0)
     parser (3.3.0.5)
       ast (~> 2.4.1)
@@ -71,6 +72,7 @@ PLATFORMS
 
 DEPENDENCIES
   minitest (~> 5.16)
+  minitest-stub-const (~> 0.6)
   owm_sdk!
   rake (~> 13.0)
   standard (~> 1.3)

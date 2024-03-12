@@ -32,7 +32,7 @@ module OwmSdk
       @location_cache = LruRedux::Cache.new(LOCATION_CACHE_SIZE)
       @weather_cache = LruRedux::TTL::Cache.new(WEATHER_CACHE_SIZE, WEATHER_CACHE_TTL)
 
-      @polling_thread = Thread.new { polling_loop } if @mode == :polling
+      @polling_thread = Thread.new { polling_loop } if @mode == "polling"
     end
 
     class << self
