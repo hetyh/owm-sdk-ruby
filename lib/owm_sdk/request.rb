@@ -1,5 +1,7 @@
 module OwmSdk
   module Request
+    private
+
     def get(path, query)
       uri = URI.parse("https://api.openweathermap.org")
       uri.path = path

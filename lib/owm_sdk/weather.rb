@@ -25,6 +25,8 @@ module OwmSdk
 
       validate_configuration(config)
 
+      @logger = Logger.new(STDOUT)
+
       @location_cache = LruRedux::Cache.new(LOCATION_CACHE_SIZE)
       @weather_cache = LruRedux::TTL::Cache.new(WEATHER_CACHE_SIZE, WEATHER_CACHE_TTL)
 
@@ -86,7 +88,7 @@ module OwmSdk
         begin
           update_weather
         rescue Error => e
-          puts "Error during polling: #{e.message}"
+          @logger.error "Error during polling: #{e.message}"
         end
 
         sleep POLLING_RATE
