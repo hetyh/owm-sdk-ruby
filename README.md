@@ -6,11 +6,11 @@ Example SDK for working with OpenWeatherMap
 
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add 
+    $ bundle add owm_sdk
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install 
+    $ gem install owm_sdk
 
 ## Usage
 
@@ -37,6 +37,7 @@ puts client.get_weather("London")
 Polling usage:
 
 ```ruby
+
 require 'owm_sdk'
 
 client = OwmSdk::Weather.new(
